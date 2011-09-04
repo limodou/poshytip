@@ -27,7 +27,7 @@
         if (this.opts.closeButton){
             inner = '<div><div class="tip-inner tip-bg-image"></div><span class="tip-close-button"></span></div>'
         }else{
-            inner = '<div><div class="tip-inner tip-bg-image"></div><span class="tip-close-button"></span></div>'
+            inner = '<div><div class="tip-inner tip-bg-image"></div></div>'
         }
 		this.$tip = $(['<div class="',this.opts.className,'">',
 				inner,
@@ -35,7 +35,7 @@
 			'</div>'].join('')).appendTo(document.body);
 		this.$arrow = this.$tip.find('div.tip-arrow');
 		this.$inner = this.$tip.find('div.tip-inner');
-        this.$closeButton = this.$tip.find('span.tip-close-button');
+		this.$closeButton = this.$tip.find('span.tip-close-button');
 		this.disabled = false;
 		this.content = null;
 		this.init();
@@ -71,12 +71,13 @@
 						break;
 				}
 			}
-            if (this.opts.closeButton){
-                var self = this;
-                this.$closeButton.click(function(){
-                    self.hide();
-                });
-            }
+      if (this.opts.closeButton){
+        var self = this;
+        this.$inner.css('padding-right', '15px');
+        this.$closeButton.click(function(){
+          self.hide();
+        });
+      }
 		},
 		mouseenter: function(e) {
 			if (this.disabled)
@@ -415,8 +416,6 @@
 		var opts = $.extend({}, $.fn.poshytip.defaults, options);
 
 		// generate CSS for this tip class if not already generated
-        var padding = '';
-        if (opts.closeButton) padding = 'padding-right:13px;'
 		if (!$('#poshytip-css-' + opts.className)[0])
 			$(['<style id="poshytip-css-',opts.className,'" type="text/css">',
 				'div.',opts.className,'{visibility:hidden;position:absolute;top:0;left:0;}',
@@ -425,12 +424,15 @@
 				'div.',opts.className,' td.tip-right{background-position:100% 0;}',
 				'div.',opts.className,' td.tip-bottom{background-position:100% 100%;}',
 				'div.',opts.className,' td.tip-left{background-position:0 100%;}',
-				'div.',opts.className,' div.tip-inner{background-position:-',opts.bgImageFrameSize,'px -',opts.bgImageFrameSize,'px;'+padding+'}',
+				'div.',opts.className,' div.tip-inner{background-position:-',opts.bgImageFrameSize,'px -',opts.bgImageFrameSize,'px;}',
 				'div.',opts.className,' div.tip-arrow{visibility:hidden;position:absolute;overflow:hidden;font:1px/1px sans-serif;}',
-				'div.',opts.className,' span.tip-close-button{cursor:pointer;width:7px;height:7px;position:absolute;right:4px;top:4px;overflow:hidden;background-image:url("'+opts.closeImage+'");}',
-				'div.',opts.className,' span.tip-close-button:hover{border:1px solid #ccc;}',
 			'</style>'].join('')).appendTo('head');
-
+    if (opts.closeButton && !$('#poshytip-css-close-button')[0]){
+			$(['<style id="poshytip-css-close-button" type="text/css">',
+ 				'span.tip-close-button{cursor:pointer;width:7px;height:7px;position:absolute;right:4px;top:4px;margin:4px;overflow:hidden;background-image:url('+opts.closeImage+');}',
+				'span.tip-close-button:hover{border:1px solid #ccc;}',
+ 			'</style>'].join('\n')).appendTo('head');
+ 		}
 		// check if we need to hook live events
 		if (opts.liveEvents && opts.showOn != 'none') {
 			var deadOpts = $.extend({}, opts, { liveEvents: false });

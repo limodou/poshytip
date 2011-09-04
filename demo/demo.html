@@ -175,6 +175,12 @@
 			$('#button-live-events').click(function() {
 				$('#demo-live-events').append(', <a title="Hey, there! This is a tooltip." href="#">Hover for a tooltip</a>');
 			});
+			
+			$('#demo-close-button > a').poshytip({
+				content : 'TTTTTTTTTTTTTTTTTTTT',
+				closeButton: true,
+				closeImage: '../src/cross_grey_small.png'
+			});
 
 		});
 		//]]>
@@ -226,6 +232,7 @@
 						<li><a href="#follow-cursor">Following the Mouse Cursor</a></li>
 						<li><a href="#manual-trigger">API Example - Triggering the Tooltip Manually</a></li>
 						<li><a href="#live-events">Using Live Events</a></li>
+						<li><a href="#close-button">Show Close Button</a></li>
 					</ul>
 				</li>
 				<li><a href="#options">Options</a></li>
@@ -531,6 +538,19 @@ $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('dest
 $('#button-live-events').click(function() {
 	$('#demo-live-events').append(', &lt;a title="Hey, there! This is a tooltip." href="#"&gt;Hover for a tooltip&lt;/a&gt;');
 });</pre>
+			</div>
+
+			<h3 id="close-button">Show Close Button in tips</h3>
+			<p>Sometimes you may want to show close button, and close it manually, you can set <code>closeButton:true</code> to enable
+				this feature. And you should also set <code>closeImage:'&lt;someimage&gt;'</code> to set an close image.</p> 
+      <!-- #demo-close-button -->
+      <p id="demo-close-button"><a title="Hey, This test is demenstrate close button." href="#">Hover for a tooltip</a></p>
+			<div class="code-block">
+			<pre class="sh_javascript">$('#demo-close-button &gt; a').poshytip({
+	closeButton: true,
+	closeImage: 'cross_grey_small.png'
+});
+</pre>
 			</div>
 
 			<h2 id="options">Options</h2>
