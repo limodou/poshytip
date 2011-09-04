@@ -22,12 +22,20 @@
 	$.Poshytip = function(elm, options) {
 		this.$elm = $(elm);
 		this.opts = $.extend({}, $.fn.poshytip.defaults, options);
+        if (this.opts.closeButton) this.opts.allowTipHover = true;
+        var inner;
+        if (this.opts.closeButton){
+            inner = '<div><div class="tip-inner tip-bg-image"></div><span class="tip-close-button"></span></div>'
+        }else{
+            inner = '<div><div class="tip-inner tip-bg-image"></div><span class="tip-close-button"></span></div>'
+        }
 		this.$tip = $(['<div class="',this.opts.className,'">',
-				'<div class="tip-inner tip-bg-image"></div>',
+				inner,
 				'<div class="tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left"></div>',
 			'</div>'].join('')).appendTo(document.body);
 		this.$arrow = this.$tip.find('div.tip-arrow');
 		this.$inner = this.$tip.find('div.tip-inner');
+        this.$closeButton = this.$tip.find('span.tip-close-button');
 		this.disabled = false;
 		this.content = null;
 		this.init();
@@ -63,6 +71,12 @@
 						break;
 				}
 			}
+            if (this.opts.closeButton){
+                var self = this;
+                this.$closeButton.click(function(){
+                    self.hide();
+                });
+            }
 		},
 		mouseenter: function(e) {
 			if (this.disabled)
@@ -174,7 +188,6 @@
 			// check for images - this code is here (i.e. executed each time we show the tip and not on init) due to some browser inconsistencies
 			var bgImage = this.$tip.css('background-image').match(reBgImage),
 				arrow = this.$arrow.css('background-image').match(reBgImage);
-
 			if (bgImage) {
 				var bgImagePNG = rePNG.test(bgImage[1]);
 				// fallback to background-color/padding/border in IE6 if a PNG is used
@@ -402,6 +415,8 @@
 		var opts = $.extend({}, $.fn.poshytip.defaults, options);
 
 		// generate CSS for this tip class if not already generated
+        var padding = '';
+        if (opts.closeButton) padding = 'padding-right:13px;'
 		if (!$('#poshytip-css-' + opts.className)[0])
 			$(['<style id="poshytip-css-',opts.className,'" type="text/css">',
 				'div.',opts.className,'{visibility:hidden;position:absolute;top:0;left:0;}',
@@ -410,8 +425,10 @@
 				'div.',opts.className,' td.tip-right{background-position:100% 0;}',
 				'div.',opts.className,' td.tip-bottom{background-position:100% 100%;}',
 				'div.',opts.className,' td.tip-left{background-position:0 100%;}',
-				'div.',opts.className,' div.tip-inner{background-position:-',opts.bgImageFrameSize,'px -',opts.bgImageFrameSize,'px;}',
+				'div.',opts.className,' div.tip-inner{background-position:-',opts.bgImageFrameSize,'px -',opts.bgImageFrameSize,'px;'+padding+'}',
 				'div.',opts.className,' div.tip-arrow{visibility:hidden;position:absolute;overflow:hidden;font:1px/1px sans-serif;}',
+				'div.',opts.className,' span.tip-close-button{cursor:pointer;width:7px;height:7px;position:absolute;right:4px;top:4px;overflow:hidden;background-image:url("'+opts.closeImage+'");}',
+				'div.',opts.className,' span.tip-close-button:hover{border:1px solid #ccc;}',
 			'</style>'].join('')).appendTo('head');
 
 		// check if we need to hook live events
@@ -464,7 +481,9 @@
 		slide: 			true,		// use slide animation
 		slideOffset: 		8,		// slide animation offset
 		showAniDuration: 	300,		// show animation duration - set to 0 if you don't want show animation
-		hideAniDuration: 	300		// hide animation duration - set to 0 if you don't want hide animation
+		hideAniDuration: 	300,		// hide animation duration - set to 0 if you don't want hide animation
+        closeButton:        false,   //show close button
+        closeImage:        ''   //show close button
 	};
 
 })(jQuery);
